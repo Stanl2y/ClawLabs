@@ -4,10 +4,10 @@
 
 Reproducible local lab for studying agentic AI prompt injection, MCP tool misuse, tool-surface poisoning, and defended-vs-baseline behavior.
 
-## WSL NanoClaw Hybrid MCP Attack Lab Presentation
+## WSL NanoClaw Hybrid MCP Attack Lab Summary
 
-- [View the presentation](https://htmlpreview.github.io/?https://github.com/Stanl2y/ClawLabs/blob/main/docs/wsl-hybrid-presentation-20260614/presentation.html)
-- [Download the presentation package](docs/wsl-hybrid-presentation-20260614.zip)
+- [View the summary](https://htmlpreview.github.io/?https://github.com/Stanl2y/ClawLabs/blob/main/docs/wsl-hybrid-presentation-20260614/presentation.html)
+- [Download the summary package](docs/wsl-hybrid-presentation-20260614.zip)
 - [Open the tracked HTML file](docs/wsl-hybrid-presentation-20260614/presentation.html)
 
 This repository is split into two levels:

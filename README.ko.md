@@ -4,10 +4,10 @@
 
 Agentic AI 프롬프트 인젝션, MCP 도구 오용, 도구 표면 오염, 방어 전후 동작을 재현하기 위한 로컬 실험실입니다.
 
-## WSL NanoClaw Hybrid MCP Attack Lab 발표 자료
+## WSL NanoClaw Hybrid MCP Attack Lab 정리자료
 
-- [발표 보기](https://htmlpreview.github.io/?https://github.com/Stanl2y/ClawLabs/blob/main/docs/wsl-hybrid-presentation-20260614/presentation.html)
-- [발표 패키지 다운로드](docs/wsl-hybrid-presentation-20260614.zip)
+- [정리자료 보기](https://htmlpreview.github.io/?https://github.com/Stanl2y/ClawLabs/blob/main/docs/wsl-hybrid-presentation-20260614/presentation.html)
+- [정리자료 패키지 다운로드](docs/wsl-hybrid-presentation-20260614.zip)
 - [저장소의 HTML 파일 열기](docs/wsl-hybrid-presentation-20260614/presentation.html)
 
 이 저장소는 두 단계로 구성되어 있습니다.
