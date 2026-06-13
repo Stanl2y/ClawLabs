@@ -140,13 +140,13 @@ Environment file:
 EOF_HELP
 }
 
-require_repo
-use_node
-
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" || "${1:-}" == "help" ]]; then
   print_help
   exit 0
 fi
+
+require_repo
+use_node
 
 if [[ $# -gt 0 ]]; then
   if ! run_shortcut "$*"; then
