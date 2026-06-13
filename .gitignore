@@ -1,6 +1,7 @@
 .basedpyright
 .coverage
 .debug-journal.md
+.env
 .mypy_cache/
 .omo/
 .pytest_cache/

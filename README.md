@@ -5,7 +5,7 @@ Reproducible local lab for studying agentic AI prompt injection, MCP tool misuse
 This repository is split into two levels:
 
 1. Immediate local reproduction from this repo alone
-2. Optional WSL NanoClaw reproduction, which needs a separate `~/labs/nanoclaw` runtime
+2. Optional WSL NanoClaw reproduction, which needs a separate NanoClaw runtime
 
 The commands in the first section were re-verified from a fresh clone before this README update.
 
@@ -127,12 +127,12 @@ This repository is designed to stay local and synthetic by default.
 
 ## Optional WSL NanoClaw Reproduction
 
-This section is not "clone and run". It needs a separate NanoClaw runtime already prepared in WSL.
+This section is not "clone and run". It needs a separate NanoClaw runtime already prepared in WSL. The NanoClaw directory can be anywhere; set it in `.env`.
 
 Required extra environment:
 
 - WSL
-- a working NanoClaw checkout at `~/labs/nanoclaw`
+- a working NanoClaw checkout, for example `~/labs/nanoclaw` or any other path
 - WSL `node` and `pnpm`
 - a configured NanoClaw group for the hybrid lab flow
 
@@ -147,6 +147,25 @@ The wrapper scripts forward to:
 - `nanoclaw-attack-lab/wsl-only-manual-chat.sh`
 - `nanoclaw-attack-lab/wsl-only-hybrid-lib.sh`
 
+Create and edit the WSL lab environment file:
+
+```bash
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh env
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh edit-env
+```
+
+Set these values for each teammate's machine:
+
+```bash
+NANOCLAW_DIR=/home/alice/dev/nanoclaw
+NODE_BIN_DIR=/home/alice/.nvm/versions/node/v22.20.0/bin
+GROUP_ID=ag-your-own-group-id
+GROUP_DIR=groups/_ping-test
+DEFAULT_FLOW=baseline
+```
+
+If `node` and `pnpm` are already on `PATH`, `NODE_BIN_DIR` can be left empty. `GROUP_DIR` defaults to `groups/_ping-test`; change it only if your NanoClaw group directory has a different name.
+
 Reference docs:
 
 - `nanoclaw-attack-lab/RUNBOOK.md`
@@ -157,7 +176,7 @@ What the WSL path is for:
 - switching `google_workspace_lab` between `baseline` and `defended`
 - running the vendor attack scenarios through the NanoClaw group
 - running the `shopping_mall` poisoned-vs-normal comparison
-- checking evidence under `~/labs/nanoclaw/groups/_ping-test/...`
+- checking evidence under `$NANOCLAW_DIR/$GROUP_DIR/...`
 
 ## Shopping Lab Only
 
@@ -181,7 +200,7 @@ Reference:
 
 - If `uv sync --frozen` fails because Python 3.12 is missing, install Python 3.12 or let `uv` provision the interpreter, then rerun `uv sync --frozen`.
 - If `node --test ...` fails, check that Node.js 22.x is installed.
-- If a teammate wants the NanoClaw WSL flow, do not start from this repository alone; start from the WSL guide in `docs/pure-wsl-nanoclaw-repro.ko.md`.
+- If a teammate wants the NanoClaw WSL flow, do not assume `~/labs/nanoclaw`; run the `env` command and set `NANOCLAW_DIR` to that machine's actual NanoClaw checkout.
 
 ## Documentation
 

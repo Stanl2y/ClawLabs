@@ -4,9 +4,48 @@ set -euo pipefail
 SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
 SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
 LAB_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-RUNNER="$SCRIPT_DIR/run-google-workspace.sh"
-DEFAULT_NANOCLAW_DIR="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
 ENV_PATH="${NANOCLAW_ENV:-$LAB_DIR/.env}"
+
+is_nanoclaw_dir() {
+  local candidate="$1"
+  [[ -n "$candidate" && -f "$candidate/package.json" && -f "$candidate/scripts/chat.ts" ]]
+}
+
+detect_runner() {
+  if [[ -x "$SCRIPT_DIR/run-google-workspace-lab.sh" || -f "$SCRIPT_DIR/run-google-workspace-lab.sh" ]]; then
+    printf '%s\n' "$SCRIPT_DIR/run-google-workspace-lab.sh"
+    return 0
+  fi
+  printf '%s\n' "$SCRIPT_DIR/wsl-only-run-google-workspace.sh"
+}
+
+detect_default_nanoclaw_dir() {
+  local candidate
+  for candidate in "$LAB_DIR" "$(cd "$SCRIPT_DIR/../../../.." 2>/dev/null && pwd)" "$HOME/labs/nanoclaw" "$PWD"; do
+    if is_nanoclaw_dir "$candidate"; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  printf '%s\n' "$HOME/labs/nanoclaw"
+}
+
+detect_default_node_bin_dir() {
+  if command -v node >/dev/null 2>&1; then
+    dirname "$(command -v node)"
+    return 0
+  fi
+  if [[ -d "$HOME/.nvm/versions/node" ]]; then
+    find "$HOME/.nvm/versions/node" -mindepth 2 -maxdepth 2 -type f -name node -path '*/bin/node' 2>/dev/null | sort -V | tail -n 1 | xargs -r dirname
+    return 0
+  fi
+  printf '\n'
+}
+
+RUNNER="$(detect_runner)"
+DEFAULT_NANOCLAW_DIR="$(detect_default_nanoclaw_dir)"
+DEFAULT_NODE_BIN_DIR="$(detect_default_node_bin_dir)"
+DEFAULT_GROUP_DIR="groups/_ping-test"
 
 load_env() {
   [[ -f "$ENV_PATH" ]] || return 0
@@ -18,7 +57,7 @@ load_env() {
     local value="${line#*=}"
     key="${key//[[:space:]]/}"
     case "$key" in
-      NANOCLAW_DIR|NODE_BIN_DIR|GROUP_ID|DEFAULT_FLOW)
+      NANOCLAW_DIR|NODE_BIN_DIR|GROUP_ID|GROUP_DIR|DEFAULT_FLOW)
         export "$key=$value"
         ;;
     esac
@@ -32,8 +71,9 @@ write_default_env() {
   fi
   cat > "$ENV_PATH" <<EOF_ENV
 NANOCLAW_DIR=$DEFAULT_NANOCLAW_DIR
-NODE_BIN_DIR=$HOME/.nvm/versions/node/v22.20.0/bin
-GROUP_ID=ag-1780974144312-4bw6ax
+NODE_BIN_DIR=$DEFAULT_NODE_BIN_DIR
+GROUP_ID=
+GROUP_DIR=$DEFAULT_GROUP_DIR
 DEFAULT_FLOW=baseline
 EOF_ENV
   echo "$ENV_PATH"
@@ -42,23 +82,26 @@ EOF_ENV
 load_env
 
 NANOCLAW_DIR="${NANOCLAW_DIR:-$DEFAULT_NANOCLAW_DIR}"
-NODE_BIN_DIR="${NODE_BIN_DIR:-$HOME/.nvm/versions/node/v22.20.0/bin}"
+NODE_BIN_DIR="${NODE_BIN_DIR:-$DEFAULT_NODE_BIN_DIR}"
 
 require_repo() {
-  if [[ ! -d "$NANOCLAW_DIR" ]]; then
-    echo "NanoClaw repo not found: $NANOCLAW_DIR" >&2
+  if ! is_nanoclaw_dir "$NANOCLAW_DIR"; then
+    echo "NanoClaw repo not found or invalid: $NANOCLAW_DIR" >&2
+    echo "Set NANOCLAW_DIR in $ENV_PATH to the directory that contains package.json and scripts/chat.ts." >&2
     exit 1
   fi
 }
 
 use_node() {
-  export PATH="$NODE_BIN_DIR:$PATH"
+  if [[ -n "$NODE_BIN_DIR" ]]; then
+    export PATH="$NODE_BIN_DIR:$PATH"
+  fi
   if ! command -v node >/dev/null 2>&1; then
-    echo "node not found. Set NODE_BIN_DIR in $ENV_PATH." >&2
+    echo "node not found. Install Node in WSL or set NODE_BIN_DIR in $ENV_PATH." >&2
     exit 1
   fi
   if ! command -v pnpm >/dev/null 2>&1; then
-    echo "pnpm not found. Set NODE_BIN_DIR in $ENV_PATH." >&2
+    echo "pnpm not found. Install pnpm in WSL or set NODE_BIN_DIR in $ENV_PATH." >&2
     exit 1
   fi
 }
@@ -73,30 +116,30 @@ send_prompt() {
 
 run_shortcut() {
   case "$1" in
-    /readiness) "$RUNNER" readiness ;;
-    /baseline) "$RUNNER" baseline ;;
-    /defended) "$RUNNER" defended ;;
-    /hybrid-status) "$RUNNER" hybrid-status ;;
-    /google-baseline) "$RUNNER" google-baseline ;;
-    /google-defended) "$RUNNER" google-defended ;;
-    /document|/lab-document) "$RUNNER" lab-document ;;
-    /tool-poison|/lab-tool-poisoning) "$RUNNER" lab-tool-poisoning ;;
-    /response-injection|/lab-response-injection) "$RUNNER" lab-response-injection ;;
-    /tool-confusion|/lab-tool-confusion) "$RUNNER" lab-tool-confusion ;;
-    /rag|/lab-rag) "$RUNNER" lab-rag ;;
-    /skill|/lab-skill) "$RUNNER" lab-skill ;;
-    /shop-normal|/shopping-normal) "$RUNNER" shopping-normal ;;
-    /shop-poison|/shopping-poisoned) "$RUNNER" shopping-poisoned ;;
-    /lab-evidence) "$RUNNER" show-lab-evidence ;;
-    /shop-mode) "$RUNNER" show-shopping-mode ;;
-    /shop-evidence) "$RUNNER" show-shopping-evidence ;;
-    /shop-tool-surface) "$RUNNER" show-shopping-tool-surface ;;
-    /reset-evidence) "$RUNNER" reset-hybrid-evidence ;;
-    /clear-chat) "$RUNNER" clear-chat ;;
-    /run) "$RUNNER" run ;;
-    /edit) "$RUNNER" edit-env ;;
-    /env) "$RUNNER" env ;;
-    /status) "$RUNNER" status ;;
+    /readiness) bash "$RUNNER" readiness ;;
+    /baseline) bash "$RUNNER" baseline ;;
+    /defended) bash "$RUNNER" defended ;;
+    /hybrid-status) bash "$RUNNER" hybrid-status ;;
+    /google-baseline) bash "$RUNNER" google-baseline ;;
+    /google-defended) bash "$RUNNER" google-defended ;;
+    /document|/lab-document) bash "$RUNNER" lab-document ;;
+    /tool-poison|/lab-tool-poisoning) bash "$RUNNER" lab-tool-poisoning ;;
+    /response-injection|/lab-response-injection) bash "$RUNNER" lab-response-injection ;;
+    /tool-confusion|/lab-tool-confusion) bash "$RUNNER" lab-tool-confusion ;;
+    /rag|/lab-rag) bash "$RUNNER" lab-rag ;;
+    /skill|/lab-skill) bash "$RUNNER" lab-skill ;;
+    /shop-normal|/shopping-normal) bash "$RUNNER" shopping-normal ;;
+    /shop-poison|/shopping-poisoned) bash "$RUNNER" shopping-poisoned ;;
+    /lab-evidence) bash "$RUNNER" show-lab-evidence ;;
+    /shop-mode) bash "$RUNNER" show-shopping-mode ;;
+    /shop-evidence) bash "$RUNNER" show-shopping-evidence ;;
+    /shop-tool-surface) bash "$RUNNER" show-shopping-tool-surface ;;
+    /reset-evidence) bash "$RUNNER" reset-hybrid-evidence ;;
+    /clear-chat) bash "$RUNNER" clear-chat ;;
+    /run) bash "$RUNNER" run ;;
+    /edit) bash "$RUNNER" edit-env ;;
+    /env) bash "$RUNNER" env ;;
+    /status) bash "$RUNNER" status ;;
     /help) print_help ;;
     *) return 1 ;;
   esac
@@ -106,7 +149,7 @@ print_help() {
   cat <<EOF_HELP
 Manual pure WSL NanoClaw chat
 
-Usage from ~/labs/nanoclaw:
+Usage:
   bash ./manual-google-workspace-chat.sh
   bash ./manual-google-workspace-chat.sh "your prompt"
   bash ./manual-google-workspace-chat.sh /run
@@ -137,6 +180,11 @@ Interactive shortcuts:
 
 Environment file:
   $ENV_PATH
+
+For non-default NanoClaw installs, run:
+  bash ./run-google-workspace-lab.sh env
+  bash ./run-google-workspace-lab.sh edit-env
+and set NANOCLAW_DIR, GROUP_ID, GROUP_DIR, and NODE_BIN_DIR.
 EOF_HELP
 }
 

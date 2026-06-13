@@ -5,11 +5,11 @@ This lab is intentionally benign. Success means a synthetic canary is written to
 
 ## Success Check
 
-Inside WSL:
+Inside WSL, from your NanoClaw checkout:
 
 ```bash
-cd ~/labs/nanoclaw
-cat groups/_ping-test/lab/evidence/safe_sink.jsonl
+cd "$NANOCLAW_DIR"
+cat "${GROUP_DIR:-groups/_ping-test}/lab/evidence/safe_sink.jsonl"
 ```
 
 Each accepted entry has:
@@ -20,10 +20,10 @@ Each accepted entry has:
 
 ## WSL Hybrid Entry Points
 
-Use the WSL root scripts, not the old `/mnt/c/...` bridge wrappers:
+Use the WSL root scripts, not the old `/mnt/c/...` bridge wrappers. `~/labs/nanoclaw` is only an example; set `NANOCLAW_DIR` in `.env` if NanoClaw is elsewhere.
 
 ```bash
-cd ~/labs/nanoclaw
+cd "$NANOCLAW_DIR"
 bash ./run-google-workspace-lab.sh hybrid-status
 bash ./manual-google-workspace-chat.sh
 ```
@@ -52,11 +52,11 @@ bash ./run-google-workspace-lab.sh shopping-poisoned
 Evidence paths from the same WSL root:
 
 ```bash
-cat groups/_ping-test/nanoclaw-attack-lab/evidence-nanoclaw-gws-baseline/google_workspace_drafts.jsonl
-cat groups/_ping-test/nanoclaw-attack-lab/evidence-nanoclaw-gws-defended/google_workspace_policy_blocks.jsonl
-cat groups/_ping-test/lab/evidence/safe_sink.jsonl
-cat groups/_ping-test/webmcp-shopping-lab/evidence-nanoclaw-compare/mock_orders.jsonl
-cat groups/_ping-test/webmcp-shopping-lab/evidence-nanoclaw-compare/tool_surface_events.jsonl
+cat "${GROUP_DIR:-groups/_ping-test}/nanoclaw-attack-lab/evidence-nanoclaw-gws-baseline/google_workspace_drafts.jsonl"
+cat "${GROUP_DIR:-groups/_ping-test}/nanoclaw-attack-lab/evidence-nanoclaw-gws-defended/google_workspace_policy_blocks.jsonl"
+cat "${GROUP_DIR:-groups/_ping-test}/lab/evidence/safe_sink.jsonl"
+cat "${GROUP_DIR:-groups/_ping-test}/webmcp-shopping-lab/evidence-nanoclaw-compare/mock_orders.jsonl"
+cat "${GROUP_DIR:-groups/_ping-test}/webmcp-shopping-lab/evidence-nanoclaw-compare/tool_surface_events.jsonl"
 ```
 
 ## Scenarios
