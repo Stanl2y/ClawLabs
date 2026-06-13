@@ -127,44 +127,106 @@ This repository is designed to stay local and synthetic by default.
 
 ## Optional WSL NanoClaw Reproduction
 
-This section is not "clone and run". It needs a separate NanoClaw runtime already prepared in WSL. The NanoClaw directory can be anywhere; set it in `.env`.
+Use this section when you want to run the same lab through a real NanoClaw WSL runtime. The NanoClaw checkout is separate from this repository, and its location is not fixed. Pick any WSL path and record it as `NANOCLAW_DIR`.
 
-Required extra environment:
+### 1. Install NanoClaw In WSL
 
-- WSL
-- a working NanoClaw checkout, for example `~/labs/nanoclaw` or any other path
-- WSL `node` and `pnpm`
-- a configured NanoClaw group for the hybrid lab flow
+Open a WSL bash shell. Install Node.js 20+ and `git` first. Node.js 22.x is recommended because the local shopping tests use Node 22.
 
-The main entry scripts in this repository for that flow are:
+Choose a directory for NanoClaw. This example uses `$HOME/dev/nanoclaw`, but any WSL path is valid:
 
-- `nanoclaw-attack-lab/run-google-workspace-lab.sh`
-- `nanoclaw-attack-lab/manual-google-workspace-chat.sh`
+```bash
+export NANOCLAW_DIR="$HOME/dev/nanoclaw"
+mkdir -p "$(dirname "$NANOCLAW_DIR")"
+git clone https://github.com/nanocoai/nanoclaw.git "$NANOCLAW_DIR"
+cd "$NANOCLAW_DIR"
+corepack enable
+corepack prepare pnpm@10.33.0 --activate
+pnpm install
+pnpm run build
+```
 
-The wrapper scripts forward to:
+For a first-time NanoClaw setup, run the NanoClaw setup flow and create or identify the agent group you will use for this lab:
 
-- `nanoclaw-attack-lab/wsl-only-run-google-workspace.sh`
-- `nanoclaw-attack-lab/wsl-only-manual-chat.sh`
-- `nanoclaw-attack-lab/wsl-only-hybrid-lib.sh`
+```bash
+cd "$NANOCLAW_DIR"
+pnpm run setup
+pnpm run ncl groups list
+```
 
-Create and edit the WSL lab environment file:
+Save the target group id. It should look like `ag-...`; the lab scripts use it as `GROUP_ID`.
+
+### 2. Configure This Lab For Your NanoClaw Path
+
+From this repository root, create the lab environment file:
 
 ```bash
 bash nanoclaw-attack-lab/run-google-workspace-lab.sh env
 bash nanoclaw-attack-lab/run-google-workspace-lab.sh edit-env
 ```
 
-Set these values for each teammate's machine:
+Set values for the current machine:
 
 ```bash
-NANOCLAW_DIR=/home/alice/dev/nanoclaw
-NODE_BIN_DIR=/home/alice/.nvm/versions/node/v22.20.0/bin
+NANOCLAW_DIR=/absolute/wsl/path/to/nanoclaw
+NODE_BIN_DIR=
 GROUP_ID=ag-your-own-group-id
 GROUP_DIR=groups/_ping-test
 DEFAULT_FLOW=baseline
 ```
 
-If `node` and `pnpm` are already on `PATH`, `NODE_BIN_DIR` can be left empty. `GROUP_DIR` defaults to `groups/_ping-test`; change it only if your NanoClaw group directory has a different name.
+Rules for these values:
+
+- `NANOCLAW_DIR` must point to the NanoClaw checkout that contains `package.json` and `scripts/chat.ts`.
+- `NODE_BIN_DIR` can stay empty if WSL can already find `node` and `pnpm`; otherwise set it to the directory containing those binaries, such as an `nvm` `bin` directory.
+- `GROUP_ID` is the NanoClaw agent group id from `pnpm run ncl groups list`.
+- `GROUP_DIR` is the evidence directory for that group. The scripts default to `groups/_ping-test`; change it only if your NanoClaw group directory differs.
+
+Check the resolved paths before running scenarios:
+
+```bash
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh status
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh show-paths
+```
+
+### 3. Run The NanoClaw Flow
+
+Start the NanoClaw host in one WSL terminal:
+
+```bash
+cd "$NANOCLAW_DIR"
+pnpm start
+```
+
+In another WSL terminal, run the lab commands from this repository root:
+
+```bash
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh readiness
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh baseline
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh show-baseline
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh defended
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh show-defended
+```
+
+The hybrid flow also supports the vendor and shopping scenarios:
+
+```bash
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh hybrid-status
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh lab-document
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh lab-tool-poisoning
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh lab-response-injection
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh lab-tool-confusion
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh lab-rag
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh lab-skill
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh shopping-normal
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh shopping-poisoned
+```
+
+For interactive experimentation:
+
+```bash
+bash nanoclaw-attack-lab/manual-google-workspace-chat.sh
+```
 
 Reference docs:
 
@@ -200,7 +262,7 @@ Reference:
 
 - If `uv sync --frozen` fails because Python 3.12 is missing, install Python 3.12 or let `uv` provision the interpreter, then rerun `uv sync --frozen`.
 - If `node --test ...` fails, check that Node.js 22.x is installed.
-- If a teammate wants the NanoClaw WSL flow, do not assume `~/labs/nanoclaw`; run the `env` command and set `NANOCLAW_DIR` to that machine's actual NanoClaw checkout.
+- If a teammate wants the NanoClaw WSL flow, do not assume any default NanoClaw path; run the `env` command and set `NANOCLAW_DIR` to that machine's actual checkout.
 
 ## Documentation
 
