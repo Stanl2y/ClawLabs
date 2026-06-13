@@ -189,7 +189,56 @@ bash nanoclaw-attack-lab/run-google-workspace-lab.sh status
 bash nanoclaw-attack-lab/run-google-workspace-lab.sh show-paths
 ```
 
-### 3. Run The NanoClaw Flow
+### 3. Sync The Lab Into The NanoClaw Group
+
+NanoClaw runs agent sessions from the group workspace under `$NANOCLAW_DIR/$GROUP_DIR`. Sync this repository's lab files there before the first run, and rerun the same commands after changing lab code:
+
+```bash
+mkdir -p "$NANOCLAW_DIR/$GROUP_DIR/lab"
+mkdir -p "$NANOCLAW_DIR/$GROUP_DIR/nanoclaw-attack-lab" "$NANOCLAW_DIR/$GROUP_DIR/webmcp-shopping-lab" "$NANOCLAW_DIR/$GROUP_DIR/lab/fixtures"
+cp -R nanoclaw-attack-lab/. "$NANOCLAW_DIR/$GROUP_DIR/nanoclaw-attack-lab/"
+cp -R webmcp-shopping-lab/. "$NANOCLAW_DIR/$GROUP_DIR/webmcp-shopping-lab/"
+cp -R nanoclaw-attack-lab/fixtures/. "$NANOCLAW_DIR/$GROUP_DIR/lab/fixtures/"
+cp nanoclaw-attack-lab/safe-sink-mcp.mjs "$NANOCLAW_DIR/$GROUP_DIR/lab/safe-sink-mcp.mjs"
+```
+
+Register the hybrid MCP servers that are not auto-switched by the Google runner:
+
+```bash
+cd "$NANOCLAW_DIR"
+pnpm run ncl groups config add-mcp-server \
+  --id "$GROUP_ID" \
+  --name lab_vendor \
+  --command node \
+  --args '["/workspace/agent/lab/safe-sink-mcp.mjs"]' \
+  --env '{"LAB_DIR":"/workspace/agent/lab"}'
+
+pnpm run ncl groups config add-mcp-server \
+  --id "$GROUP_ID" \
+  --name shopping_mall \
+  --command node \
+  --args '["/workspace/agent/webmcp-shopping-lab/webmcp-bridge.mjs","--mode-file","/workspace/agent/webmcp-shopping-lab/mode-state.json","--evidence-dir","/workspace/agent/webmcp-shopping-lab/evidence-nanoclaw-compare"]' \
+  --env '{"WEBMCP_MODE":"normal"}'
+
+pnpm run ncl groups restart --id "$GROUP_ID"
+```
+
+The `baseline` and `defended` commands below configure `google_workspace_lab` automatically, so you do not need to add that server by hand.
+
+Verify the full hybrid wiring:
+
+```bash
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh hybrid-status
+bash nanoclaw-attack-lab/run-google-workspace-lab.sh config
+```
+
+The config should include at least:
+
+- `google_workspace_lab`
+- `lab_vendor`
+- `shopping_mall`
+
+### 4. Run The NanoClaw Flow
 
 Start the NanoClaw host in one WSL terminal:
 
