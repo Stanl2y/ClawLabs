@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Everyday Mart | Order evidence ledger</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand-lockup" href="./">
+          <span class="brand-mark">EM</span>
+          <span>
+            <span class="microcopy">Local lab ledger</span>
+            <span class="brand-name">Everyday Mart</span>
+          </span>
+        </a>
+        <nav class="top-links" aria-label="Evidence navigation">
+          <a href="./">Storefront</a>
+          <a href="./lab.html">WebMCP lab</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell evidence-shell">
+      <section class="evidence-hero">
+        <p class="eyebrow">Separated lab evidence</p>
+        <h1>Order evidence ledger</h1>
+        <p class="lede">
+          This page is separate from the production storefront. It reads local JSONL evidence generated
+          by the mock WebMCP server and does not expose real payments or customer data.
+        </p>
+        <button id="refreshEvidenceButton" type="button" class="primary-cta">Refresh ledger</button>
+      </section>
+
+      <section class="evidence-grid" aria-label="Evidence ledgers">
+        <article class="console-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Mock orders</p>
+              <h2>Order side effects</h2>
+            </div>
+            <span id="evidenceStatus" class="console-tag">No orders loaded</span>
+          </div>
+          <div id="orderEvidenceList" class="evidence-list">
+            <p>No mock orders recorded.</p>
+          </div>
+        </article>
+
+        <article class="console-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Tool metadata</p>
+              <h2>Surface events</h2>
+            </div>
+            <span class="console-tag">Local only</span>
+          </div>
+          <div id="surfaceEvidenceList" class="evidence-list">
+            <p>No tool surface events loaded.</p>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="./evidence.js"></script>
+  </body>
+</html>

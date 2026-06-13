@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "google_workspace_lab": {
+      "command": "node",
+      "args": [
+        "/workspace/agent/lab/google-workspace-mcp.mjs",
+        "--mode",
+        "defended",
+        "--evidence-dir",
+        "/workspace/agent/lab/evidence/google_workspace_defended"
+      ],
+      "env": {
+        "GOOGLE_WORKSPACE_MCP_MODE": "defended"
+      }
+    }
+  }
+}

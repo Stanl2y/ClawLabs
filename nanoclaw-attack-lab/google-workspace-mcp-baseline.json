@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "google_workspace_lab": {
+      "command": "node",
+      "args": [
+        "C:/IntSec/nanoclaw-attack-lab/google-workspace-mcp.mjs",
+        "--mode",
+        "baseline",
+        "--evidence-dir",
+        "C:/IntSec/.omo/evidence/nanoclaw-google-workspace-baseline"
+      ],
+      "env": {
+        "GOOGLE_WORKSPACE_MCP_MODE": "baseline"
+      }
+    }
+  }
+}

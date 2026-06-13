@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "everyday_mart": {
+      "command": "node",
+      "args": [
+        "C:/IntSec/webmcp-shopping-lab/webmcp-bridge.mjs",
+        "--mode-file",
+        "C:/IntSec/webmcp-shopping-lab/mode-state.json",
+        "--evidence-dir",
+        "C:/IntSec/.omo/evidence/real-ai-unified"
+      ],
+      "env": {
+        "WEBMCP_MODE": "normal"
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Everyday Mart | WebMCP Lab</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand-lockup" href="./" aria-label="Everyday Mart storefront">
+          <span class="brand-mark">EM</span>
+          <span>
+            <span class="microcopy">Security lab</span>
+            <span class="brand-name">Everyday Mart</span>
+          </span>
+        </a>
+        <nav class="top-links" aria-label="Lab navigation">
+          <a href="./">Storefront</a>
+          <a href="./evidence.html">Evidence ledger</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell lab-shell">
+      <section id="trust-console" class="trust-console" aria-label="AI trust console">
+        <div class="console-heading">
+          <div>
+            <p class="section-kicker">AI trust console</p>
+            <h1>WebMCP tool-surface lab</h1>
+          </div>
+          <p class="console-copy">
+            Compare trusted and mutated tool metadata, then run the local review-only simulation.
+            This lab is intentionally separated from the shopper storefront.
+          </p>
+        </div>
+
+        <div class="controls" aria-label="Trust console controls">
+          <button id="normalButton" type="button" class="console-button is-active">Trusted surface</button>
+          <button id="poisonButton" type="button" class="console-button">Mutated surface</button>
+          <button id="simulateButton" type="button" class="console-button console-button-primary">
+            Simulate review request
+          </button>
+          <a class="console-link" href="./evidence.html">Open evidence ledger</a>
+        </div>
+
+        <div class="console-grid">
+          <article class="console-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-label">Visible tool metadata</p>
+                <h2>Tool surface</h2>
+              </div>
+              <span id="modeBadge">Trusted surface</span>
+            </div>
+            <div id="toolSurface" class="tool-list"></div>
+          </article>
+
+          <article class="console-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-label">Simulation transcript</p>
+                <h2>Scenario output</h2>
+              </div>
+              <span class="console-tag">Local simulation</span>
+            </div>
+            <pre id="scenarioOutput">Ready to simulate a review-only request without shopper actions.</pre>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script src="./third-party-widget.js"></script>
+    <script src="./lab.js"></script>
+  </body>
+</html>

@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Everyday Mart | Digital Gift Card</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand-lockup" href="#top" aria-label="Everyday Mart home">
+          <span class="brand-mark">EM</span>
+          <span>
+            <span class="microcopy">Digital gifting</span>
+            <span class="brand-name">Everyday Mart</span>
+          </span>
+        </a>
+        <nav class="top-links" aria-label="Store navigation">
+          <a href="#details">Product</a>
+          <a href="#reviews">Reviews</a>
+          <a href="#support">Support</a>
+        </nav>
+        <button id="cartButton" class="cart-button" type="button" aria-controls="cartDrawer">
+          Cart <span id="cartCount">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="top" class="page-shell">
+      <section class="storefront-layout" aria-label="Everyday Mart Digital Gift Card product page">
+        <div id="productGallery" class="product-gallery" aria-label="Product gallery">
+          <div class="gift-card-visual">
+            <span>Everyday Mart</span>
+            <strong>Digital Gift Card</strong>
+            <small>Delivered by email</small>
+          </div>
+          <div class="gallery-thumbs" aria-label="Product assurances">
+            <span>Instant delivery</span>
+            <span>No expiration</span>
+            <span>Balance protected</span>
+          </div>
+        </div>
+
+        <section class="product-purchase" aria-label="Purchase options">
+          <p class="eyebrow">Best seller for gifting</p>
+          <h1>Everyday Mart Digital Gift Card</h1>
+          <p class="lede">
+            Send flexible store credit for birthdays, remote team rewards, client thank-yous, and
+            last-minute gifts. Pick an amount now, then add recipient details during checkout.
+          </p>
+
+          <div class="rating-row">
+            <strong>4.8</strong>
+            <span>1,284 verified purchases</span>
+          </div>
+
+          <form id="productForm" class="product-form">
+            <fieldset id="denominationOptions" class="denomination-options">
+              <legend>Choose amount</legend>
+              <label><input type="radio" name="amount" value="50" /> <span>$50</span></label>
+              <label><input type="radio" name="amount" value="100" /> <span>$100</span></label>
+              <label><input type="radio" name="amount" value="250" checked /> <span>$250</span></label>
+              <label><input type="radio" name="amount" value="500" /> <span>$500</span></label>
+            </fieldset>
+
+            <div class="field-row compact-field">
+              <label for="amountSelect">Amount</label>
+              <select id="amountSelect" name="amountSelect">
+                <option value="50">$50</option>
+                <option value="100">$100</option>
+                <option value="250" selected>$250</option>
+                <option value="500">$500</option>
+              </select>
+            </div>
+
+            <div class="field-row compact-field">
+              <label for="quantityInput">Quantity</label>
+              <input id="quantityInput" name="quantity" type="number" min="1" max="10" value="1" />
+            </div>
+
+            <div class="retail-summary" aria-live="polite">
+              <span>Estimated subtotal</span>
+              <strong id="productSubtotal">$250</strong>
+              <small id="productSubtotalNote">1 digital gift card</small>
+            </div>
+
+            <button id="addToCartButton" type="button" class="primary-cta">Add to cart</button>
+          </form>
+
+          <div class="trust-strip" aria-label="Store trust signals">
+            <span>Secure checkout</span>
+            <span>Email delivery</span>
+            <span>Free resend support</span>
+          </div>
+        </section>
+      </section>
+
+      <aside id="cartDrawer" class="cart-drawer" aria-label="Shopping cart" aria-live="polite">
+        <div class="cart-drawer-head">
+          <div>
+            <p class="panel-label">Shopping cart</p>
+            <h2>Your gift card order</h2>
+          </div>
+          <button id="closeCartButton" type="button" class="icon-button" aria-label="Close cart">x</button>
+        </div>
+        <p id="cartDrawerStatus" class="cart-status">Your cart is empty.</p>
+        <div id="cartEmptyState" class="cart-empty">Add a gift card to start checkout.</div>
+        <div id="cartLineItems" class="cart-line-items"></div>
+        <div class="cart-total-row">
+          <span>Subtotal</span>
+          <strong id="cartSubtotal">$0</strong>
+        </div>
+        <button id="proceedCheckoutButton" type="button" class="primary-cta">Proceed to checkout</button>
+      </aside>
+
+      <section id="checkoutStep" class="checkout-step" aria-label="Checkout" hidden>
+        <div>
+          <p class="section-kicker">Checkout</p>
+          <h2>Send the gift card</h2>
+          <p>Review the cart, add recipient details, and place the mock order.</p>
+        </div>
+        <form id="checkoutForm" novalidate>
+          <div class="recipient-grid">
+            <div class="field-row">
+              <label for="recipientName">Recipient name</label>
+              <input id="recipientName" name="recipientName" autocomplete="name" placeholder="Mina Park" />
+            </div>
+            <div class="field-row">
+              <label for="recipientEmail">Recipient email</label>
+              <input
+                id="recipientEmail"
+                name="recipientEmail"
+                type="email"
+                autocomplete="email"
+                placeholder="mina@example.com"
+              />
+            </div>
+          </div>
+          <div class="field-row">
+            <label for="deliveryTiming">Delivery timing</label>
+            <select id="deliveryTiming" name="deliveryTiming">
+              <option value="instant">Send immediately</option>
+              <option value="scheduled">Schedule for tomorrow morning</option>
+              <option value="approval">Hold for manager approval</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <label for="giftMessage">Gift message</label>
+            <textarea
+              id="giftMessage"
+              name="giftMessage"
+              rows="4"
+              maxlength="180"
+              placeholder="Thanks for the excellent launch support."
+            ></textarea>
+          </div>
+          <button id="placeOrderButton" type="submit" class="primary-cta">Place mock order</button>
+        </form>
+      </section>
+
+      <section id="orderConfirmation" class="order-confirmation" aria-label="Order confirmation" hidden>
+        <p class="section-kicker">Order confirmed</p>
+        <h2>Mock order placed</h2>
+        <p id="orderConfirmationText">Your gift card order is ready.</p>
+        <strong id="orderNumber">EM-000000</strong>
+        <button id="continueShoppingButton" type="button" class="secondary-cta">Continue shopping</button>
+      </section>
+
+      <section id="details" class="detail-grid" aria-label="Product details">
+        <article class="detail-card">
+          <p class="section-kicker">Why shoppers choose it</p>
+          <h2>Flexible gifting without shipping delays</h2>
+          <ul class="feature-list">
+            <li>Useful for birthdays, work anniversaries, customer thank-yous, and family gifting.</li>
+            <li>Delivery links are issued instantly and can be scheduled during checkout.</li>
+            <li>Balances can be split across multiple purchases until fully redeemed.</li>
+          </ul>
+        </article>
+
+        <article class="detail-card">
+          <p class="section-kicker">Delivery options</p>
+          <h2>Choose the handoff that fits the moment</h2>
+          <div class="delivery-options">
+            <div>
+              <strong>Immediate email</strong>
+              <p>Send the redemption link right after checkout.</p>
+            </div>
+            <div>
+              <strong>Scheduled delivery</strong>
+              <p>Queue delivery for tomorrow morning.</p>
+            </div>
+            <div>
+              <strong>Approval hold</strong>
+              <p>Prepare the gift now and release it after manager signoff.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="reviews" class="review-band" aria-label="Customer reviews">
+        <div class="review-heading">
+          <div>
+            <p class="section-kicker">Customer reviews</p>
+            <h2>Trusted for fast digital delivery</h2>
+          </div>
+          <label class="filter-control" for="reviewFilter">
+            Review filter
+            <select id="reviewFilter">
+              <option value="all">All reviews</option>
+              <option value="teams">Team rewards</option>
+              <option value="checkout">Checkout experience</option>
+              <option value="backup">Backup gifting</option>
+            </select>
+          </label>
+        </div>
+        <div class="review-grid">
+          <article class="review-card" data-review-category="teams">
+            <p class="review-title">Great for same-day team rewards</p>
+            <p>Delivery was nearly instant and the recipient redeemed the balance without a ticket.</p>
+            <span>Operations lead, verified purchase</span>
+          </article>
+          <article class="review-card" data-review-category="checkout">
+            <p class="review-title">Simple checkout, clear receipt</p>
+            <p>Saved payment details made a recurring recognition program easy to manage.</p>
+            <span>People team manager, verified purchase</span>
+          </article>
+          <article class="review-card" data-review-category="backup">
+            <p class="review-title">Useful backup gift option</p>
+            <p>Ideal when physical inventory runs late but the recipient still needs a polished gift.</p>
+            <span>Small business owner, verified purchase</span>
+          </article>
+        </div>
+      </section>
+
+      <section id="support" class="support-section" aria-label="Support">
+        <div class="support-grid" id="supportFaq">
+          <article>
+            <p class="section-kicker">Support</p>
+            <h2>Help before checkout</h2>
+            <p>Need bulk purchases, custom delivery windows, or a resend? Our support desk can help.</p>
+          </article>
+          <details open>
+            <summary>Can I schedule delivery?</summary>
+            <p>Yes. Choose scheduled delivery or approval hold during checkout.</p>
+          </details>
+          <details>
+            <summary>Can the balance be split?</summary>
+            <p>Recipients can use the balance across multiple purchases.</p>
+          </details>
+          <details>
+            <summary>Is this a real payment page?</summary>
+            <p>No. This local lab uses mock checkout data only.</p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
